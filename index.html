@@ -1,0 +1,470 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>医学科研智能工作台</title>
+<style>
+:root{--blue:#2457a7;--bg:#f4f7fb;--line:#dfe6ef;--text:#233044;--muted:#68778b}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.65 "Microsoft YaHei",Arial,sans-serif}
+header{background:#183b70;color:white;padding:24px max(20px,calc((100% - 1200px)/2))}
+header h1{margin:0;font-size:25px}header p{margin:6px 0 0;color:#d9e5f7}
+.layout{max-width:1200px;margin:22px auto;padding:0 16px;display:grid;grid-template-columns:210px minmax(0,1fr);gap:20px}
+nav,.panel{background:white;border:1px solid var(--line);border-radius:12px}
+nav{padding:12px;height:max-content;position:sticky;top:12px}
+nav button{display:block;width:100%;text-align:left;border:0;background:transparent;padding:12px;border-radius:8px;color:var(--text);cursor:pointer;font-size:15px;margin:3px 0}
+nav button.active,nav button:hover{background:#eaf1ff;color:var(--blue);font-weight:600}
+main{min-width:0}.panel{padding:22px;margin-bottom:18px}
+h2{font-size:21px;margin:0 0 6px}h3{font-size:16px;margin:20px 0 8px}
+.muted{color:var(--muted);font-size:13px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.statgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:16px 0}
+.stat{padding:15px;border:1px solid var(--line);border-radius:9px;background:#fbfcff}
+.stat strong{display:block;font-size:23px;color:var(--blue)}
+label{display:block;font-weight:600;margin:12px 0 5px}
+input,textarea,select{width:100%;border:1px solid #cbd5e1;border-radius:7px;padding:10px;font:inherit;background:white;color:var(--text)}
+textarea{min-height:100px;resize:vertical}
+button.primary,.btn{border:0;background:var(--blue);color:white;padding:10px 15px;border-radius:7px;cursor:pointer;font:inherit}
+button.secondary{border:1px solid var(--line);background:white;padding:9px 13px;border-radius:7px;cursor:pointer}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
+.tablewrap{overflow:auto;max-height:380px;border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;font-size:13px;white-space:nowrap}
+th,td{padding:9px 11px;text-align:left;border-bottom:1px solid var(--line)}
+th{background:#f1f5fa;position:sticky;top:0}
+.result{padding:13px;background:#f7f9fc;border:1px solid var(--line);border-radius:8px;margin-top:12px;overflow-wrap:anywhere}
+.result h3{margin-top:0}.hidden{display:none!important}
+.paperout{white-space:pre-wrap;font-family:inherit}
+.checkrow{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid #edf0f5}
+.checkrow input{width:auto;margin-top:7px}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:8px 20px 28px}
+a{color:var(--blue)}
+@media(max-width:760px){.layout{grid-template-columns:1fr}nav{position:static;display:grid;grid-template-columns:repeat(2,1fr)}nav button{font-size:13px;padding:8px}.grid{grid-template-columns:1fr}.statgrid{grid-template-columns:1fr 1fr}header h1{font-size:21px}}
+</style>
+</head>
+<body>
+<header>
+  <h1>医学科研智能工作台</h1>
+  <p>Medical Research Workspace · 本地运行 · 数据优先 · 辅助科研</p>
+</header>
+
+<div class="layout">
+<nav>
+  <button class="active" data-page="home">🏠 工作台首页</button>
+  <button data-page="data">📊 科研数据分析</button>
+  <button data-page="literature">📚 PubMed 文献检索</button>
+  <button data-page="writing">✍️ 论文结构助手</button>
+  <button data-page="checklist">☑️ 科研规范检查</button>
+  <button data-page="about">ℹ️ 使用说明</button>
+</nav>
+
+<main>
+<section id="home" class="page">
+  <div class="panel">
+    <h2>欢迎使用医学科研智能工作台</h2>
+    <p class="muted">这是一个无需安装 Python 的浏览器版基础工具。数据默认在当前浏览器内处理，不会自动上传到本工具的服务器。</p>
+    <div class="statgrid">
+      <div class="stat"><strong>01</strong>数据检查与描述统计</div>
+      <div class="stat"><strong>02</strong>PubMed 文献搜索</div>
+      <div class="stat"><strong>03</strong>论文结构草稿</div>
+    </div>
+    <h3>建议使用流程</h3>
+    <ol>
+      <li>在“科研数据分析”中导入 CSV 数据，检查数据质量。</li>
+      <li>在“PubMed 文献检索”中查找研究主题相关文献。</li>
+      <li>在“论文结构助手”中整理研究问题、方法和结果。</li>
+      <li>在“科研规范检查”中核对研究报告应包含的内容。</li>
+    </ol>
+    <p class="muted">提示：请勿将姓名、身份证号、病历号等可识别个人身份的信息放入测试数据。医学研究数据应遵守所在机构的伦理、隐私和数据安全要求。</p>
+  </div>
+  <div class="panel">
+    <h2>快速体验</h2>
+    <p>没有准备数据文件？可以点击下方按钮，生成一份虚构的演示数据并进入数据分析页面。</p>
+    <button class="primary" id="demoBtn">载入演示数据</button>
+  </div>
+</section>
+
+<section id="data" class="page hidden">
+  <div class="panel">
+    <h2>科研数据分析</h2>
+    <p class="muted">支持 CSV 文件。建议使用 UTF-8 编码；Excel 文件可先另存为 CSV UTF-8。当前版本提供基础数据检查和描述性统计，不替代正式统计分析。</p>
+    <label for="csvFile">选择 CSV 数据文件</label>
+    <input id="csvFile" type="file" accept=".csv,text/csv">
+    <div class="actions">
+      <button class="secondary" id="demoDataBtn">载入演示数据</button>
+      <button class="secondary" id="downloadDataBtn" disabled>导出当前数据 CSV</button>
+      <button class="secondary" id="downloadStatsBtn" disabled>导出统计结果 CSV</button>
+    </div>
+    <div id="dataMessage" class="result">尚未导入数据。</div>
+  </div>
+  <div id="dataResults" class="hidden">
+    <div class="panel">
+      <h2>数据概览</h2>
+      <div class="statgrid" id="dataStats"></div>
+      <h3>数据预览（最多显示前 100 行）</h3>
+      <div id="preview" class="tablewrap"></div>
+    </div>
+    <div class="panel">
+      <h2>变量质量检查</h2>
+      <p class="muted">缺失数指空白单元格；数值变量按可转换为数字的单元格计算。异常值采用 1.5×四分位距规则标记，仅供核查，不会自动删除。</p>
+      <div id="qualityTable" class="tablewrap"></div>
+    </div>
+    <div class="panel">
+      <h2>数值变量描述性统计</h2>
+      <div id="descTable" class="tablewrap"></div>
+    </div>
+  </div>
+</section>
+
+<section id="literature" class="page hidden">
+  <div class="panel">
+    <h2>PubMed 医学文献检索</h2>
+    <p class="muted">通过 NCBI PubMed 网站检索。英文关键词通常效果更好，也可使用 AND、OR、引号等检索语法。</p>
+    <label for="pubQuery">检索主题或关键词</label>
+    <input id="pubQuery" placeholder='例如: social media AND academic stress'>
+    <div class="grid">
+      <div>
+        <label for="pubYear">发表年份起始（可选）</label>
+        <input id="pubYear" type="number" min="1900" max="2100" placeholder="例如 2020">
+      </div>
+      <div>
+        <label for="pubCount">返回条数</label>
+        <select id="pubCount">
+          <option value="5">5 条</option>
+          <option value="10" selected>10 条</option>
+          <option value="20">20 条</option>
+          <option value="50">50 条</option>
+        </select>
+      </div>
+    </div>
+    <div class="actions"><button class="primary" id="searchPubBtn">开始检索</button></div>
+    <div id="pubMessage" class="result">输入关键词后开始检索。检索需要联网。</div>
+    <div id="pubResults"></div>
+  </div>
+</section>
+
+<section id="writing" class="page hidden">
+  <div class="panel">
+    <h2>论文结构助手</h2>
+    <p class="muted">填写研究信息后，生成可复制的 IMRaD 论文提纲。系统不会编造研究结果、统计量或参考文献。</p>
+    <label for="paperTitle">论文暂定标题</label>
+    <input id="paperTitle" placeholder="例如：社交媒体使用与大学生学业压力的关联">
+    <label for="paperType">研究类型</label>
+    <select id="paperType">
+      <option>横断面研究</option>
+      <option>队列研究</option>
+      <option>病例对照研究</option>
+      <option>随机对照试验</option>
+      <option>系统综述与 Meta 分析</option>
+      <option>实验研究</option>
+      <option>其他研究</option>
+    </select>
+    <label for="paperAim">研究背景与目的</label>
+    <textarea id="paperAim" placeholder="为什么开展研究？主要研究问题是什么？"></textarea>
+    <label for="paperMethods">研究对象与方法</label>
+    <textarea id="paperMethods" placeholder="研究设计、样本来源、纳入排除标准、变量定义、测量方法、统计方法等。"></textarea>
+    <label for="paperResults">主要结果（填写真实结果）</label>
+    <textarea id="paperResults" placeholder="填写样本量、主要结果、效应量、置信区间、P 值等；没有的数据不要猜测。"></textarea>
+    <label for="paperDiscussion">讨论要点与局限性</label>
+    <textarea id="paperDiscussion" placeholder="主要发现、与既往研究的比较、可能解释、研究局限性。"></textarea>
+    <div class="actions">
+      <button class="primary" id="makePaperBtn">生成论文结构草稿</button>
+      <button class="secondary" id="downloadPaperBtn" disabled>下载 TXT 草稿</button>
+    </div>
+    <div id="paperOutput" class="result paperout hidden"></div>
+  </div>
+</section>
+
+<section id="checklist" class="page hidden">
+  <div class="panel">
+    <h2>科研规范检查</h2>
+    <p class="muted">选择报告规范，逐项核对论文是否提供了必要信息。此处为基础自查清单，不是官方完整清单，也不构成合规认证。</p>
+    <label for="standard">选择报告规范</label>
+    <select id="standard">
+      <option value="strobe">STROBE：观察性研究</option>
+      <option value="consort">CONSORT：随机对照试验</option>
+      <option value="prisma">PRISMA：系统综述与 Meta 分析</option>
+      <option value="stard">STARD：诊断准确性研究</option>
+    </select>
+    <div id="checkItems"></div>
+    <div class="statgrid">
+      <div class="stat"><strong id="checkDone">0</strong>已完成</div>
+      <div class="stat"><strong id="checkTotal">0</strong>检查项目</div>
+      <div class="stat"><strong id="checkRate">0%</strong>完成比例</div>
+    </div>
+    <div class="actions">
+      <button class="secondary" id="resetChecksBtn">重置当前清单</button>
+      <button class="secondary" id="exportChecksBtn">导出自查结果</button>
+    </div>
+  </div>
+</section>
+
+<section id="about" class="page hidden">
+  <div class="panel">
+    <h2>使用说明与限制</h2>
+    <h3>本地数据处理</h3>
+    <p>CSV 解析、描述统计和论文草稿在当前网页中运行。刷新网页后，未导出的结果可能丢失；本版本不提供长期数据库存储。</p>
+    <h3>数据安全</h3>
+    <p>数据文件不会被本网页主动上传。文献检索会向 NCBI 发送检索词；请勿把患者信息、隐私数据或未授权研究资料填入外部服务。</p>
+    <h3>统计学边界</h3>
+    <p>均值、标准差、四分位数和异常值标记仅为基础描述。异常值不等于错误值。缺失数据处理、混杂因素控制、模型选择和因果推断需要结合研究设计判断。</p>
+    <h3>文献与写作</h3>
+    <p>检索结果以 PubMed 数据为准。引用前应核对原文、作者、年份、DOI 和研究结论。论文草稿只组织你提供的内容，不自动验证事实。</p>
+    <h3>下一步可扩展</h3>
+    <ul>
+      <li>Excel 文件导入和更丰富的图表。</li>
+      <li>相关分析、多元线性回归和 Logistic 回归。</li>
+      <li>文献摘要批量整理、筛选和引用导出。</li>
+      <li>接入可选 AI 服务，辅助文献总结与代码生成。</li>
+    </ul>
+  </div>
+</section>
+</main>
+</div>
+<footer>医学科研智能工作台 · 本地浏览器版 MVP · 请对科研结论与数据分析结果进行人工核验</footer>
+
+<script>
+"use strict";
+const $ = id => document.getElementById(id);
+let headers = [], rows = [], currentStats = [], paperText = "";
+
+document.querySelectorAll("nav button").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll("nav button").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    document.querySelectorAll(".page").forEach(p => p.classList.add("hidden"));
+    $(btn.dataset.page).classList.remove("hidden");
+  });
+});
+
+function esc(value) {
+  return String(value ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[c]));
+}
+function parseCSV(text) {
+  const result = [];
+  let row = [], cell = "", quoted = false;
+  text = text.replace(/^\uFEFF/, "");
+  for (let i=0; i<text.length; i++) {
+    const c = text[i];
+    if (quoted) {
+      if (c === '"' && text[i+1] === '"') { cell += '"'; i++; }
+      else if (c === '"') quoted = false;
+      else cell += c;
+    } else {
+      if (c === '"' && cell === "") quoted = true;
+      else if (c === ",") { row.push(cell); cell = ""; }
+      else if (c === "\n" || c === "\r") {
+        if (c === "\r" && text[i+1] === "\n") i++;
+        row.push(cell); cell = "";
+        if (row.some(v => v.trim() !== "")) result.push(row);
+        row = [];
+      } else cell += c;
+    }
+  }
+  row.push(cell);
+  if (row.some(v => v.trim() !== "")) result.push(row);
+  if (result.length < 1) throw new Error("文件中没有可读取的数据。");
+  const h = result.shift().map((v,i) => v.trim() || `变量${i+1}`);
+  return {headers:h, rows:result.map(r => h.map((_,i) => (r[i] ?? "").trim()))};
+}
+function csvEscape(v) {
+  const s = String(v ?? "");
+  return /[",\r\n]/.test(s) ? '"' + s.replace(/"/g,'""') + '"' : s;
+}
+function download(filename, content, type="text/plain;charset=utf-8") {
+  const blob = new Blob(["\uFEFF",content], {type});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = filename; a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+function num(v) {
+  if (v === null || v === undefined || String(v).trim() === "") return null;
+  const n = Number(String(v).replace(/,/g,""));
+  return Number.isFinite(n) ? n : null;
+}
+function mean(a) { return a.reduce((s,v)=>s+v,0)/a.length; }
+function median(a) {
+  if (!a.length) return NaN;
+  const b=[...a].sort((x,y)=>x-y), m=Math.floor(b.length/2);
+  return b.length%2 ? b[m] : (b[m-1]+b[m])/2;
+}
+function quantile(a,p) {
+  const b=[...a].sort((x,y)=>x-y);
+  if (!b.length) return NaN;
+  const pos=(b.length-1)*p, lo=Math.floor(pos), hi=Math.ceil(pos);
+  return b[lo]+(b[hi]-b[lo])*(pos-lo);
+}
+function fmt(v) { return Number.isFinite(v) ? Number(v.toFixed(4)).toString() : "—"; }
+function tableHTML(head, body) {
+  return "<table><thead><tr>"+head.map(x=>`<th>${esc(x)}</th>`).join("")+
+    "</tr></thead><tbody>"+body.map(r=>"<tr>"+r.map(x=>`<td>${esc(x)}</td>`).join("")+"</tr>").join("")+"</tbody></table>";
+}
+function loadData(h,r,label) {
+  headers=h; rows=r;
+  $("dataMessage").textContent=`${label}：已载入 ${rows.length} 行、${headers.length} 列。`;
+  $("dataResults").classList.remove("hidden");
+  $("downloadDataBtn").disabled=false;
+  $("downloadStatsBtn").disabled=false;
+  renderData();
+}
+function renderData() {
+  const n=rows.length, p=headers.length;
+  $("dataStats").innerHTML=[
+    ["数据行数",n],["变量数量",p],["单元格总数",n*p]
+  ].map(([k,v])=>`<div class="stat"><strong>${v}</strong>${k}</div>`).join("");
+  $("preview").innerHTML=tableHTML(headers,rows.slice(0,100));
+  const quality=[], desc=[];
+  currentStats=[];
+  headers.forEach((h,j)=>{
+    const vals=rows.map(r=>r[j]);
+    const missing=vals.filter(v=>String(v).trim()==="").length;
+    const parsed=vals.map(num).filter(v=>v!==null);
+    const isNumeric=parsed.length>0 && parsed.length>=vals.filter(v=>String(v).trim()!=="").length*0.8;
+    let outliers=0;
+    if(isNumeric && parsed.length>=4){
+      const q1=quantile(parsed,.25), q3=quantile(parsed,.75), iqr=q3-q1;
+      outliers=parsed.filter(v=>v<q1-1.5*iqr||v>q3+1.5*iqr).length;
+    }
+    quality.push([h,isNumeric?"数值型":"文本/混合型",missing,fmt(missing/(n||1)*100)+"%",isNumeric?outliers:"—"]);
+    if(isNumeric){
+      const m=mean(parsed), sd=parsed.length>1?Math.sqrt(parsed.reduce((s,v)=>s+(v-m)**2,0)/(parsed.length-1)):NaN;
+      const stat={变量:h,有效数:parsed.length,缺失数:missing,均值:fmt(m),标准差:fmt(sd),中位数:fmt(median(parsed)),最小值:fmt(Math.min(...parsed)),最大值:fmt(Math.max(...parsed)),疑似异常值数:outliers};
+      currentStats.push(stat);
+      desc.push([h,parsed.length,missing,fmt(m),fmt(sd),fmt(median(parsed)),fmt(Math.min(...parsed)),fmt(Math.max(...parsed)),outliers]);
+    }
+  });
+  $("qualityTable").innerHTML=tableHTML(["变量","识别类型","缺失数","缺失比例","疑似异常值数"],quality);
+  $("descTable").innerHTML=desc.length
+    ? tableHTML(["变量","有效数","缺失数","均值","标准差","中位数","最小值","最大值","疑似异常值数"],desc)
+    : "<p class='muted'>未识别到可进行数值统计的变量。请检查数据格式。</p>";
+}
+$("csvFile").addEventListener("change", async e=>{
+  const file=e.target.files[0]; if(!file)return;
+  try {
+    const parsed=parseCSV(await file.text());
+    loadData(parsed.headers,parsed.rows,file.name);
+  } catch(err) { $("dataMessage").textContent="读取失败："+err.message; }
+});
+const demoHeaders=["编号","年龄","每日社交媒体使用小时","学业压力评分"];
+const demoRows=[
+ ["P001","18","2.1","12"],["P002","19","3.4","17"],["P003","20","1.2","8"],
+ ["P004","19","4.0","19"],["P005","18","","11"],["P006","21","5.2","22"],
+ ["P007","20","2.8","14"],["P008","19","3.1","16"],["P009","18","1.7","10"],
+ ["P010","20","6.0","23"],["P011","21","2.4","13"],["P012","19","3.7","18"]
+];
+function loadDemo(){loadData(demoHeaders,demoRows,"虚构演示数据");}
+$("demoBtn").addEventListener("click",()=>{loadDemo();showPage("data");});
+$("demoDataBtn").addEventListener("click",loadDemo);
+function showPage(id){
+  document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===id));
+  document.querySelectorAll(".page").forEach(p=>p.classList.toggle("hidden",p.id!==id));
+}
+$("downloadDataBtn").addEventListener("click",()=>{
+  if(!headers.length)return;
+  download("科研数据.csv",[headers,...rows].map(r=>r.map(csvEscape).join(",")).join("\r\n"),"text/csv;charset=utf-8");
+});
+$("downloadStatsBtn").addEventListener("click",()=>{
+  if(!currentStats.length){alert("没有可导出的数值变量统计结果。");return;}
+  const h=Object.keys(currentStats[0]);
+  download("描述性统计.csv",[h,...currentStats.map(o=>h.map(k=>o[k]))].map(r=>r.map(csvEscape).join(",")).join("\r\n"),"text/csv;charset=utf-8");
+});
+
+// PubMed: use NCBI E-utilities, then retrieve abstracts when available.
+$("searchPubBtn").addEventListener("click",async()=>{
+  const query=$("pubQuery").value.trim();
+  if(!query){$("pubMessage").textContent="请先输入检索关键词。";return;}
+  const btn=$("searchPubBtn"); btn.disabled=true; btn.textContent="检索中…";
+  $("pubMessage").textContent="正在连接 PubMed，请稍候。"; $("pubResults").innerHTML="";
+  try {
+    let term=query;
+    const year=$("pubYear").value.trim();
+    if(year && /^\d{4}$/.test(year)) term+=` AND ${year}:3000[dp]`;
+    const count=$("pubCount").value;
+    const base="https://eutils.ncbi.nlm.nih.gov/entrez/eutils/";
+    const s=await fetch(base+"esearch.fcgi?db=pubmed&retmode=json&retmax="+count+"&term="+encodeURIComponent(term));
+    if(!s.ok)throw new Error("PubMed 检索请求失败（HTTP "+s.status+"）");
+    const sj=await s.json(), ids=sj.esearchresult?.idlist||[];
+    if(!ids.length){$("pubMessage").textContent="没有找到匹配文献。请尝试更简洁的英文关键词。";return;}
+    const ef=await fetch(base+"efetch.fcgi?db=pubmed&retmode=xml&id="+ids.join(","));
+    if(!ef.ok)throw new Error("文献详情请求失败（HTTP "+ef.status+"）");
+    const xml=new DOMParser().parseFromString(await ef.text(),"text/xml");
+    const articles=[...xml.querySelectorAll("PubmedArticle")];
+    $("pubMessage").textContent=`检索完成：本次返回 ${articles.length} 条文献。请核对原文后再引用。`;
+    $("pubResults").innerHTML=articles.map(a=>{
+      const title=a.querySelector("ArticleTitle")?.textContent||"（无标题）";
+      const pmid=a.querySelector("PMID")?.textContent||"";
+      const journal=a.querySelector("Journal Title")?.textContent||a.querySelector("Journal > Title")?.textContent||"";
+      const yearText=a.querySelector("PubDate Year")?.textContent||a.querySelector("PubDate MedlineDate")?.textContent||"";
+      const authors=[...a.querySelectorAll("Author")].slice(0,6).map(x=>{
+        const last=x.querySelector("LastName")?.textContent||"";
+        const fore=x.querySelector("ForeName")?.textContent||x.querySelector("Initials")?.textContent||"";
+        return (last+" "+fore).trim();
+      }).filter(Boolean).join(", ");
+      const abstract=[...a.querySelectorAll("Abstract > AbstractText")].map(x=>{
+        const label=x.getAttribute("Label");
+        return (label?label+": ":"")+x.textContent;
+      }).join("\n");
+      const link="https://pubmed.ncbi.nlm.nih.gov/"+encodeURIComponent(pmid)+"/";
+      return `<article class="result"><h3><a href="${link}" target="_blank" rel="noopener">${esc(title)}</a></h3>
+        <p class="muted">${esc(authors||"作者信息未提供")} · ${esc(journal)} · ${esc(yearText)} · PMID: ${esc(pmid)}</p>
+        <p>${esc(abstract||"PubMed 未提供摘要，请打开文献页面查看。")}</p>
+        <p><a href="${link}" target="_blank" rel="noopener">打开 PubMed 原文页面 ↗</a></p></article>`;
+    }).join("");
+  } catch(err) {
+    $("pubMessage").textContent="在线检索暂时失败："+err.message+"。请检查网络，或点击下方按钮直接打开 PubMed 网站。";
+    const url="https://pubmed.ncbi.nlm.nih.gov/?term="+encodeURIComponent(query);
+    $("pubResults").innerHTML=`<p><a href="${url}" target="_blank" rel="noopener">在 PubMed 网站中搜索当前关键词 ↗</a></p>`;
+  } finally {btn.disabled=false;btn.textContent="开始检索";}
+});
+
+// Draft a structured outline only from user-entered information.
+$("makePaperBtn").addEventListener("click",()=>{
+  const title=$("paperTitle").value.trim()||"（请补充论文标题）";
+  const type=$("paperType").value;
+  const aim=$("paperAim").value.trim()||"（请填写研究背景与目的）";
+  const methods=$("paperMethods").value.trim()||"（请填写研究设计、对象、变量与统计方法）";
+  const results=$("paperResults").value.trim()||"（请填写真实研究结果，不要编造数据）";
+  const discussion=$("paperDiscussion").value.trim()||"（请补充讨论内容与研究局限性）";
+  paperText=`论文标题：${title}\n研究类型：${type}\n\n摘要\n目的：${aim}\n方法：${methods}\n结果：${results}\n结论：请根据真实结果谨慎归纳，不应超出数据支持范围。\n\n一、引言\n1. 研究背景与现有证据\n2. 当前研究空白\n3. 本研究目的与假设\n\n二、资料与方法\n${methods}\n建议补充：伦理审批与知情同意、样本量依据、变量定义、偏倚控制、缺失数据处理、统计软件及版本。\n\n三、结果\n${results}\n建议按研究目的组织结果，并报告适当的效应量与置信区间。\n\n四、讨论\n${discussion}\n建议依次讨论主要发现、与既往研究比较、可能机制、优势与局限性、实践意义。\n\n五、结论\n根据研究设计和实际结果作出审慎结论，避免将相关性直接解释为因果关系。\n\n核对提醒\n1. 确认所有数值均来自真实分析结果。\n2. 核对伦理审批、样本量和统计方法。\n3. 为引用文献补充准确的作者、年份、DOI 或 PMID。\n4. 根据研究类型核对相应报告规范。`;
+  $("paperOutput").textContent=paperText;
+  $("paperOutput").classList.remove("hidden");
+  $("downloadPaperBtn").disabled=false;
+});
+$("downloadPaperBtn").addEventListener("click",()=>{
+  if(paperText)download("论文结构草稿.txt",paperText);
+});
+
+// Basic self-check lists; consult the official current guidelines for complete requirements.
+const standards={
+strobe:["研究设计是否在标题或摘要中明确说明","摘要是否平衡概括研究内容","是否介绍科学背景与研究目的","是否说明研究设计与研究场所、时间","是否说明研究对象、纳入与排除标准","是否清楚定义结局、暴露、预测因子和混杂因素","是否说明数据来源与测量方法","是否解释样本量的确定方式","是否说明缺失数据的处理方法","是否说明统计方法及混杂因素控制","是否报告参与者数量与排除情况","是否报告主要结果及精确度（如置信区间）","是否讨论偏倚、局限性与可推广性","是否报告资金来源与利益冲突"],
+consort:["标题或摘要是否说明为随机对照试验","是否说明研究设计、分组比例与研究框架","是否说明纳入、排除标准及研究场所","是否描述干预措施并足以复现","是否说明结局指标及测量时间","是否说明样本量估算方法","是否描述随机序列生成方法","是否说明分配隐藏与实施流程","是否说明盲法及其实施情况","是否提供参与者流程图与各组人数","是否报告各组基线特征","是否报告主要与次要结局及效应估计","是否报告不良事件","是否说明试验注册、方案和资金来源"],
+prisma:["标题或摘要是否标明系统综述或 Meta 分析","是否明确研究问题与纳入标准","是否说明检索的数据库、平台和最后检索日期","是否提供可复现的完整检索策略","是否说明筛选流程及参与筛选人员","是否说明数据提取方法","是否定义主要结局与其他变量","是否说明偏倚风险评估方法","是否说明效应量及合并统计方法","是否报告研究筛选流程图","是否描述纳入研究的基本特征","是否报告单项研究的结果","是否报告合并结果及不确定性","是否评估异质性与潜在发表偏倚（适用时）","是否讨论证据局限性与资金来源"],
+stard:["是否明确说明诊断准确性研究目的","是否明确说明目标疾病与临床场景","是否说明受试者来源及纳入排除标准","是否描述待评价的指标试验","是否描述参考标准及其依据","是否说明指标试验与参考标准的实施流程","是否说明是否采用盲法判读","是否说明样本量依据","是否报告受试者流程与基线特征","是否提供敏感度、特异度及置信区间","是否说明不确定结果与缺失数据的处理","是否讨论偏倚、适用性和研究局限性"]
+};
+function renderChecks(){
+  const list=standards[$("standard").value];
+  $("checkItems").innerHTML=list.map((x,i)=>`<label class="checkrow"><input type="checkbox" data-check="${i}"><span>${esc(x)}</span></label>`).join("");
+  $("checkItems").querySelectorAll("input").forEach(c=>c.addEventListener("change",updateCheckStats));
+  updateCheckStats();
+}
+function updateCheckStats(){
+  const all=[...$("checkItems").querySelectorAll("input")],done=all.filter(x=>x.checked).length;
+  $("checkDone").textContent=done;$("checkTotal").textContent=all.length;
+  $("checkRate").textContent=(all.length?Math.round(done/all.length*100):0)+"%";
+}
+$("standard").addEventListener("change",renderChecks);
+$("resetChecksBtn").addEventListener("click",()=>{$("checkItems").querySelectorAll("input").forEach(x=>x.checked=false);updateCheckStats();});
+$("exportChecksBtn").addEventListener("click",()=>{
+  const name=$("standard").selectedOptions[0].textContent;
+  const lines=[name,"自查项目,状态",...[...$("checkItems").querySelectorAll(".checkrow")].map(row=>{
+    const c=row.querySelector("input");return `${csvEscape(row.querySelector("span").textContent)},${c.checked?"已核对":"待核对"}`;
+  })];
+  download("科研规范自查.csv",lines.join("\r\n"),"text/csv;charset=utf-8");
+});
+renderChecks();
+</script>
+</body>
+</html>
